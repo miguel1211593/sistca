@@ -1,26 +1,25 @@
-import React, { useState } from 'react';
-import { View, FlatList, Text, Image, StyleSheet } from 'react-native';
-import { TextInput, Button, ActivityIndicator } from 'react-native-paper';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 
 const App = () => {
   const [query, setQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [firstResult, setFirstResult] = useState(null);
 
   const searchDeezer = async () => {
     try {
-      setLoading(true);
       const response = await fetch(`https://api.deezer.com/search?q=${query}`);
       const data = await response.json();
-      setSearchResults(data.data);
+      if (data.data.length > 0) {
+        setFirstResult(data.data[0]);
+      } else {
+        setFirstResult(null);
+      }
     } catch (error) {
       console.error('Error searching Deezer:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = (item) => (
     <View style={styles.itemContainer}>
       <Image source={{ uri: item.album.cover_medium }} style={styles.albumImage} />
       <View style={styles.textContent}>
@@ -32,30 +31,23 @@ const App = () => {
     </View>
   );
 
-  const renderSeparator = () => <View style={styles.separator} />;
-
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Search on Deezer"
-        value={query}
-        onChangeText={setQuery}
-      />
-      <Button
-        mode="contained"
-        style={styles.button}
-        onPress={searchDeezer}
-      >
-        Search
-      </Button>
-      {loading && <ActivityIndicator animating={true} color="#0000ff" size="large" />}
-      <FlatList
-        data={searchResults}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        ItemSeparatorComponent={renderSeparator}
-      />
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Search on Deezer"
+          value={query}
+          onChangeText={setQuery}
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={searchDeezer}
+        >
+          <Text style={styles.buttonText}>Search</Text>
+        </TouchableOpacity>
+      </View>
+      {firstResult && renderItem(firstResult)}
     </View>
   );
 };
@@ -63,21 +55,24 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 10,
   },
-  input: {
-    height: 40,
-    width: '100%',
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
-    paddingHorizontal: 10,
-    marginTop:10,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginRight: 10,
   },
   itemContainer: {
-    marginTop:15,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
@@ -101,18 +96,18 @@ const styles = StyleSheet.create({
   albumImage: {
     width: 100,
     height: 100,
-    borderRadius: 5,
     marginRight: 20,
   },
-  separator: {
-    height: 1,
-    backgroundColor: 'gray',
-    marginVertical: 10,
-    width: '100%',
-  },
   button: {
-    marginTop: 10,
-    width: 200,
+    borderColor: 'black',
+    borderWidth: 1,
+    paddingVertical: 7,
+    paddingHorizontal: 30,
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
 
