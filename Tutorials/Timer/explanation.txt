@@ -1,0 +1,33 @@
+playSound(soundName): This function logs a message to the console indicating that a sound is being played. The name of the sound is passed as an argument to the function.
+
+toggleTimer(): This function toggles the isActive state between true and false. It also calls the playSound function with either 'pause' or 'start' depending on the current state of isActive.
+
+formatTime(time): This function takes a time value in seconds and converts it to a minutes:seconds format. It uses the Math.floor function to calculate the minutes and the modulus operator (%) to calculate the remaining seconds.
+
+resetTimer(): This function sets the isActive state to false, effectively stopping the timer. It also calls the playSound function with 'reset'.
+
+handleTimeChange(newTime): This function updates the duration state with the new time value passed as an argument.
+
+
+
+return: This is the JSX that your component is rendering. It's a View component that contains a Picker, a CountdownCircleTimer, and three TouchableOpacity components.
+
+Picker: This is a dropdown menu that allows the user to select the duration of the timer. The selectedValue prop is set to the duration state, and the onValueChange prop is a function that updates the duration state with the new selected value.
+
+CountdownCircleTimer: This is a circular countdown timer. The isPlaying prop is set to the isActive state, which determines whether the timer is running. The duration prop is set to the duration state, which is the total time of the timer. The colors and colorsTime props are used to change the color of the timer at different times. The onComplete prop is a function that is called when the timer finishes.
+
+TouchableOpacity: These are buttons that the user can interact with. The first one toggles between light and dark mode, the second one starts and pauses the timer, and the third one resets the timer.
+
+
+
+StyleSheet.create: This is where you define the styles for your components. It's similar to CSS in web development.
+
+container: This style is applied to the main View component. It makes the View take up the entire screen (flex: 1), centers its children both vertically (justifyContent: 'center') and horizontally (alignItems: 'center'), and sets the background color to white (backgroundColor: '#fff').
+
+darkContainer: This style is the same as container, but it's used when the app is in dark mode. The only difference is that the background color is not specified here, so it would be whatever the default background color is.
+
+button: This style is applied to the TouchableOpacity components. It's not shown in the excerpt you provided, but it would typically include properties like padding, margin, background color, etc.
+
+darkButton: This style is the same as button, but it's used when the app is in dark mode. The only difference would be the background color and text color, which would be set to colors that are visible in dark mode.
+
+The isDarkMode state is used to determine whether to use the dark or light styles. The containerStyle and buttonStyle constants are set to the dark or light styles based on the value of isDarkMode.

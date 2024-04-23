@@ -13,12 +13,6 @@ const Timer = () => {
     };
 
     
-
-    const toggleTimer = () => {
-        setIsActive(!isActive);
-        playSound(isActive ? 'pause' : 'start');
-    };
-
     const formatTime = (time) => {
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
@@ -28,6 +22,7 @@ const Timer = () => {
 
     const resetTimer = () => {
         setIsActive(false);
+        setDuration(0);
         playSound('reset');
     };
 
@@ -35,6 +30,16 @@ const Timer = () => {
         setDuration(newTime);
     };
 
+    const handleStartTimer = () => {
+        setIsActive(true);
+        playSound('start');
+    };
+
+    const handleStopTimer = () => {
+        setIsActive(false);
+        setDuration(0);
+        playSound('stop');
+    };
 
     const containerStyle = isDarkMode ? styles.darkContainer : styles.container;
     const buttonStyle = isDarkMode ? styles.darkButton : styles.button;
@@ -64,14 +69,17 @@ const Timer = () => {
             >
                 {({ remainingTime }) => <Text>{formatTime(remainingTime)}</Text>}
             </CountdownCircleTimer>
+
             <TouchableOpacity style={buttonStyle} onPress={() => setIsDarkMode(!isDarkMode)}>
                 <Text style={styles.buttonText}>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={buttonStyle} onPress={toggleTimer}>
-                <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
+
+            <TouchableOpacity style={buttonStyle} onPress={handleStartTimer}>
+                <Text style={styles.buttonText}>Start</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={buttonStyle} onPress={resetTimer}>
-                <Text style={styles.buttonText}>Reset</Text>
+        
+            <TouchableOpacity style={buttonStyle} onPress={handleStopTimer}>
+                <Text style={styles.buttonText}>Stop</Text>
             </TouchableOpacity>
         </View>
     );
@@ -89,7 +97,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#333',
-
     },
     button: {
         margin: 10,
